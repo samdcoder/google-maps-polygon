@@ -43,16 +43,22 @@ app.post('/api/data', function(req, res){
 
 app.get('/api/getLatest', function(req, res){
 	Points.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, polygon) {
- 		 polygon = polygon.points;
- 		 let data = [];
- 		 for(var i = 0; i < polygon.length; i++){
- 		 	let obj = {
- 		 		'lat': polygon[i].lat,
- 		 		'long': polygon[i].long
+ 		 if(polygon == null){
+ 		 	res.send({'data': null})
+ 		 }
+ 		 else{
+ 		 	polygon = polygon.points;
+ 		    let data = [];
+ 		    for(var i = 0; i < polygon.length; i++){
+ 		 	  let obj = {
+ 		 	   	'lat': polygon[i].lat,
+ 		 	 	'long': polygon[i].long
  		 	}
  		 	data.push(obj);
+ 		  }
+ 		 res.send({'data': data});	
  		 }
- 		 res.send({'data': data});
+ 		 
 	});
 })
 
