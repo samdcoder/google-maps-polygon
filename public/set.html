@@ -72,8 +72,9 @@
         drawingManager.setMap(map);      
 
       }
-      function setListener(){
-      	fetchPolygons();
+      function setListener(count){
+      	if(count == 1)
+      		fetchPolygons();
       	google.maps.event.addListener(drawingManager, 'overlaycomplete', function(polygon) {
    		 var coordinatesArray = polygon.overlay.getPath().getArray();
 		 //console.log("cords = ", coordinatesArray);
@@ -96,7 +97,7 @@
 
       setTimeout(function(){
       	console.log("setting the setListener");
-      	setListener();
+      	setListener(1);
       }, 3000)
 
       
@@ -131,6 +132,29 @@
 	        	//show Mumbai's co-ordinates
 	        	return;
 	        }
+            map = new google.maps.Map(document.getElementById('map'), {
+         	 center: {lat: points[0].lat, lng: points[0].long},
+		  	 zoom: 6
+			});
+	  		 drawingManager = new google.maps.drawing.DrawingManager({
+	          drawingMode: google.maps.drawing.OverlayType.MARKER,
+	          drawingControl: true,
+	          drawingControlOptions: {
+	            position: google.maps.ControlPosition.TOP_CENTER,
+	            drawingModes: ['marker', 'circle', 'polygon', 'polyline', 'rectangle']
+	          },
+	          markerOptions: {icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'},
+	          circleOptions: {
+	            fillColor: '#ffff00',
+	            fillOpacity: 1,
+	            strokeWeight: 5,
+	            clickable: false,
+	            editable: true,
+	            zIndex: 1
+	          }
+	        });
+	        drawingManager.setMap(map);      
+	        setListener(2);
 	        for(var i = 0; i < points.length; i++){
 	        	let point = {
 	        		lat: points[i].lat,

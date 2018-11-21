@@ -42,7 +42,7 @@ app.post('/api/data', function(req, res){
 
 
 app.get('/api/getLatest', function(req, res){
-	Points.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, polygon) {
+	Points.findOne({}, {}, { sort: { field : 'asc', _id: -1 } }, function(err, polygon) {
  		 if(polygon == null){
  		 	res.send({'data': null})
  		 }
