@@ -7,5 +7,4 @@ Build a get api to get the latest points from the server (done)
 On loading set.html first make a get call and display the latest polygon there, if unavailable set the zoom to Mumbai 
 
 
-servifymapsdata => db name on gearhost
 

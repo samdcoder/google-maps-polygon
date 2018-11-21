@@ -18,18 +18,12 @@ mongoose.connect(db_url, function(err){
 
 app.use(bodyParser.json());
 
-app.get('/random', function(req, res){
-	console.log("in the /random");
-	console.log("user name mongo = ", env.mongo_username);
-	console.log("password mongo = ", env.mongo_pw);
-
+app.get('/set', function(req, res){
 	res.sendFile(path.join(__dirname + '/public/set.html'));
 })
 
 app.post('/api/data', function(req, res){
-	console.log("in the /api/data");
 	let data = req.body.data;
-	//send the data to database here
 	const record = new Points({
 				_id: new mongoose.Types.ObjectId(),
 				points: data
@@ -49,8 +43,16 @@ app.post('/api/data', function(req, res){
 
 app.get('/api/getLatest', function(req, res){
 	Points.findOne({}, {}, { sort: { 'created_at' : -1 } }, function(err, polygon) {
- 		 console.log("latest polygon is ",polygon);
- 		 res.send({'data': polygon});
+ 		 polygon = polygon.points;
+ 		 let data = [];
+ 		 for(var i = 0; i < polygon.length; i++){
+ 		 	let obj = {
+ 		 		'lat': polygon[i].lat,
+ 		 		'long': polygon[i].long
+ 		 	}
+ 		 	data.push(obj);
+ 		 }
+ 		 res.send({'data': data});
 	});
 })
 
