@@ -13,12 +13,10 @@
 
     <title>Check Vendor</title>
     <style>
-      /* Always set the map height explicitly to define the size of the div
-       * element that contains the map. */
       #map {
         height: 100%;
       }
-      /* Optional: Makes the sample page fill the window. */
+  
       html, body {
         height: 100%;
         margin: 0;
@@ -29,88 +27,41 @@
   <body>
     <div id="map"></div>
     <script>
-      // This example requires the Geometry library. Include the libraries=geometry
-      // parameter when you first load the API. For example:
-      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=geometry">
-      /*
-        
-    
-      */ 
-      let polygonSet;
-
+      
+      let map;
+      let polgonSet;
       function initMap() {
-        //select center point from the first point of the map data
-        //make the get class here
         axios.get('/api/getAll')
         .then(function(response){
             polygonSet = response.data.data;
-            polygonSet.forEach((p) => {
-              console.log("p = ", p);
-            })
+            if(polygonSet != null){
+                map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: polygonSet[0][0]['lat'], lng: polygonSet[0][0]['long']},
+                zoom: 5,
+              });
+            }
+            else{
+               map = new google.maps.Map(document.getElementById('map'), {
+                center: {lat: polygonSet[0][0]['lat'], lng: polygonSet[0][0]['long']},
+                zoom: 5,
+              });
+               
+            }
+            google.maps.event.addListener(map, 'click', function(e) {
+                polygonSet.forEach((p) => {
+                  var polygonCoords = [];
+                  p.forEach((point) => {
+                    polygonCoords.push({lat: point.lat, lng: point.long})
+                  })
+                  var currentPolygon = new google.maps.Polygon({paths: polygonCoords});
+                  if(google.maps.geometry.poly.containsLocation(e.latLng, currentPolygon)){
+                      alert("in the polygon");
+                  }        
+                })
+             });    
         })
         .catch(function(error){
           console.log("error = ", error);
-        })
-
-        var map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: 24.886, lng: -70.269},
-          zoom: 5,
-        });
-
-        //this data will be served by the server 
-
-       
-        google.maps.event.addListener(map, 'click', function(e) {
-          console.log("in the onclick, polygonSet = ", polygonSet);
-          polygonSet.forEach((p) => {
-                 /*    var triangleCoords = [
-                     {lat: 25.774, lng: -80.19},
-                     {lat: 18.466, lng: -66.118},
-                     {lat: 32.321, lng: -64.757}
-                      ]; */
-              var polygonCoords = [];
-              // construct polygonCoords
-              // p represents 1 polygon
-              //point represents a point in a polygon
-              p.forEach((point) => {
-                polygonCoords.push({lat: point.lat, lng: point.long})
-              })
-              console.log("polygonCoords = ", polygonCoords);
-              //pushed all the points for a particular polygon in polygonCoords
-              var currentPolygon = new google.maps.Polygon({paths: polygonCoords});
-              if(google.maps.geometry.poly.containsLocation(e.latLng, currentPolygon)){
-                  alert("in the polygon");
-              } 
-             
-          })
-          //this selects the color depending on the point lies inside or not
-          //fetch latitude and longitude and check if it lies in any of the saved polygons
-          //fetch all the polygons in advance on the get call itself instead of fetching it in every click
-
-        /*  var resultColor =
-              google.maps.geometry.poly.containsLocation(e.latLng, bermudaTriangle) ?
-              'blue' :
-              'red';
-
-          //this chooses triangle or circle
-          var resultPath =
-              google.maps.geometry.poly.containsLocation(e.latLng, bermudaTriangle) ?
-              // A triangle.
-              "m 0 -1 l 1 2 -2 0 z" :
-              google.maps.SymbolPath.CIRCLE;
-          */
-        /*  new google.maps.Marker({
-            position: e.latLng,
-            map: map,
-            icon: {
-              path: resultPath,
-              fillColor: resultColor,
-              fillOpacity: .2,
-              strokeColor: 'white',
-              strokeWeight: .5,
-              scale: 10
-            }
-          }); */ 
         });
       }
     </script>
