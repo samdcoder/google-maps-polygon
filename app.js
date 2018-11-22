@@ -19,10 +19,16 @@ mongoose.connect(db_url, function(err){
 app.use(bodyParser.json());
 
 app.get('/set', function(req, res){
+	//serve the static file to the user 
 	res.sendFile(path.join(__dirname + '/public/set.html'));
 })
 
+app.get('/check', function(req, res){
+	res.sendFile(path.join(__dirname + '/public/check.html'));
+})
+
 app.post('/api/data', function(req, res){
+	//This api will store the polygon in the mongodb
 	let data = req.body.data;
 	const record = new Points({
 				_id: new mongoose.Types.ObjectId(),
@@ -42,6 +48,7 @@ app.post('/api/data', function(req, res){
 
 
 app.get('/api/getLatest', function(req, res){
+	//This api will return the latest polygon to the user
 	Points.findOne({}, {}, { sort: { field : 'asc', _id: -1 } }, function(err, polygon) {
  		 if(polygon == null){
  		 	res.send({'data': null})
@@ -60,6 +67,24 @@ app.get('/api/getLatest', function(req, res){
  		 }
  		 
 	});
+})
+
+app.get('/api/getAll', function(req, res){
+	Points.find({}, {}, function(err, polygon){
+		console.log("polygon = ", polygon);
+		if(polygon == null){
+			res.send({'data': null})
+		}
+		else{
+ 		 	//polygon = polygon.points;
+ 		    let data = [];
+ 		    for(var i = 0; i < polygon.length; i++){
+ 		 		data.push(polygon[i].points);
+ 		  }
+ 		 res.send({'data': data});	
+ 		 }
+ 		 
+	})
 })
 
 
