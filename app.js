@@ -18,6 +18,10 @@ mongoose.connect(db_url, function(err){
 
 app.use(bodyParser.json());
 
+app.get('/', function(req, res){
+	res.sendFile(path.join(__dirname + '/public/index.html'));
+})
+
 app.get('/set', function(req, res){
 	//serve the static file to the user 
 	res.sendFile(path.join(__dirname + '/public/set.html'));
@@ -27,7 +31,7 @@ app.get('/check', function(req, res){
 	res.sendFile(path.join(__dirname + '/public/check.html'));
 })
 
-app.post('/api/data', function(req, res){
+app.post('/api/save', function(req, res){
 	//This api will store the polygon in the mongodb
 	let data = req.body.data;
 	const record = new Points({

@@ -12,7 +12,6 @@
         height: 80%;
         width: 100%;
       }
-      /* Optional: Makes the sample page fill the window. */
       html, body {
         height: 100%;
         margin: 0;
@@ -23,7 +22,7 @@
   <body>
    <div id="map"></div>
     <br> <br>
-    <center> <button class='btn btn-danger' onclick='sendData();'> Send Data </button> <button class='btn btn-danger' onclick=''> Reset </button> </center>
+    <center> <button class='btn btn-danger' onclick='sendData();'> Send Data </button> <button class='btn btn-danger' onclick='reset()'> Reset </button> </center>
     
      <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBAr8oWvbaWdnFiAC0TlrCdq7xESzThtMM&libraries=drawing,geometry&callback=initMap"
          async defer></script>
@@ -34,98 +33,15 @@
  	 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
  
     <script>
-      // This example requires the Drawing library. Include the libraries=drawing
-      // parameter when you first load the API. For example:
-      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=drawing">
 
       let map, drawingManager;
-      let points = [];
+      let object_points = [];
       var marker;
-      $(document).ready(function(){
-
-     	
-      });
-      
+    
       function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -34.397, lng: 150.644},
-          zoom: 8
-        });
-
-        marker = new google.maps.Marker({
-                map: map
-            });
-   
-
-        drawingManager = new google.maps.drawing.DrawingManager({
-          drawingMode: google.maps.drawing.OverlayType.MARKER,
-          drawingControl: true,
-          drawingControlOptions: {
-            position: google.maps.ControlPosition.TOP_CENTER,
-            drawingModes: ['marker', 'circle', 'polygon', 'polyline', 'rectangle']
-          },
-          markerOptions: {icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'},
-          circleOptions: {
-            fillColor: '#ffff00',
-            fillOpacity: 1,
-            strokeWeight: 5,
-            clickable: false,
-            editable: true,
-            zIndex: 1
-          }
-        });
-        drawingManager.setMap(map);      
-
+        fetchPolygons();
       }
-      function setListener(count){
-      	if(count == 1)
-      		fetchPolygons();
-      	
-      	google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
-   		 console.log("polygon complete = ", polygon);
-   		 console.log("path = ", polygon.getPath());
-   		  points = [];
-   		  for(var i = 0; i < polygon.getPath().getLength(); i++) {
-   		  		let obj = {
-   		  			'lat': Number(polygon.getPath().getAt(i).toUrlValue(6).split(',')[0]), 
-   		  			'long': Number(polygon.getPath().getAt(i).toUrlValue(6).split(',')[1]) 
-   		  		}
-   		  		points.push(obj);
-    		}
-   		});
-
-   		google.maps.event.addListener(map, "click", function (event) {
-		    alert("in the click!");
-		    var latitude = event.latLng.lat();
-		    var longitude = event.latLng.lng();
-		    console.log( latitude + ', ' + longitude );
-		}); 
-
-      }
-
-      setTimeout(function(){
-      	console.log("setting the setListener");
-      	setListener(1);
-      }, 3000)
-
-      
-      function sendData(){
-      	if(points.length == 0){
-      		alert("Please select a polygon first!");
-      		return;
-      	}
-      	let body = {
-      		'data': points
-      	}
-	  	axios.post('/api/data', body, {})
-	 	.then(function(response){
-	 		console.log("response = ", response);
-	 	})
-	 	.catch(function(e){
-	 		alert("error "+e);
-	 	})
-     }
-
+      	     
      function fetchPolygons(){
      	//make a get request to an api which will fetch the latest polygon data and map it on the map
      	axios.get('/api/getLatest')
@@ -135,24 +51,31 @@
      		 // Define the LatLng coordinates for the polygon's path.
 	        var Coords = [
 	        ];
+
 	        if(points == null){
 	        	console.log("points is null");
 	        	//show Mumbai's co-ordinates
-	        	return;
+	        	 map = new google.maps.Map(document.getElementById('map'), {
+        	 		 center: {lat: 19.1136, lng: 72.8697},
+		  		 	zoom: 6
+				 });
 	        }
-            map = new google.maps.Map(document.getElementById('map'), {
-         	 center: {lat: points[0].lat, lng: points[0].long},
-		  	 zoom: 6
-			});
-	  		 drawingManager = new google.maps.drawing.DrawingManager({
-	          drawingMode: google.maps.drawing.OverlayType.MARKER,
-	          drawingControl: true,
-	          drawingControlOptions: {
+	        else{
+	     		 map = new google.maps.Map(document.getElementById('map'), {
+        	 		 center: {lat: points[0].lat, lng: points[0].long},
+		  			 zoom: 6
+				 });
+	        }
+
+         	 drawingManager = new google.maps.drawing.DrawingManager({
+	         drawingMode: google.maps.drawing.OverlayType.MARKER,
+	         drawingControl: true,
+	         drawingControlOptions: {
 	            position: google.maps.ControlPosition.TOP_CENTER,
 	            drawingModes: ['marker', 'circle', 'polygon', 'polyline', 'rectangle']
 	          },
 	          markerOptions: {icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'},
-	          circleOptions: {
+	            circleOptions: {
 	            fillColor: '#ffff00',
 	            fillOpacity: 1,
 	            strokeWeight: 5,
@@ -161,8 +84,20 @@
 	            zIndex: 1
 	          }
 	        });
+	        
 	        drawingManager.setMap(map);      
-	        setListener(2);
+	       
+	        google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
+	   		  	object_points = [];
+	   		  	for(var i = 0; i < polygon.getPath().getLength(); i++) {
+	   		  			let obj = {
+	   		  				'lat': Number(polygon.getPath().getAt(i).toUrlValue(6).split(',')[0]), 
+	   		  				'long': Number(polygon.getPath().getAt(i).toUrlValue(6).split(',')[1]) 
+	   		  			}
+	   		  			object_points.push(obj);
+	    			}
+			});
+
 	        for(var i = 0; i < points.length; i++){
 	        	let point = {
 	        		lat: points[i].lat,
@@ -186,6 +121,29 @@
      		console.log("error in latest response = ", error);
      	})
      }
+
+     function reset(){
+     	location.reload();
+     }
+
+     function sendData(){
+       if(object_points.length == 0){
+      		alert("Please select a polygon first!");
+      		return;
+      	}
+      	let body = {
+      		'data': object_points
+      	}
+	  	axios.post('/api/save', body, {})
+	 	.then(function(response){
+	 		alert("Successfully Saved your polygons!");
+	 		location.reload();
+	 	})
+	 	.catch(function(e){
+	 		alert("error "+e);
+	 	})
+     }
+
 
     </script>
     </body>
