@@ -51,13 +51,11 @@
      	axios.get('/api/getLatest')
      	.then(function(response){
      		let points = response.data.data;
-     		console.log("latest points = ", points);
      		 // Define the LatLng coordinates for the polygon's path.
 	        var Coords = [
 	        ];
 
-	        if(points == null){
-	        	console.log("points is null");
+	        if(points == null || points.length == 0){
 	        	//show Mumbai's co-ordinates
 	        	 map = new google.maps.Map(document.getElementById('map'), {
         	 		 center: {lat: 19.1136, lng: 72.8697},
@@ -132,16 +130,29 @@
 
      function sendData(){
        if(object_points.length == 0){
-      		alert("Please select a polygon first!");
-      		return;
-      	}
+      		swal({
+                 title: "No Polygon selected",
+                 text: "Please select a polygon first!",
+                 type: "warning",
+                 timer: 2000
+                 });
+                 return;
+  
+               }
       	let body = {
       		'data': object_points
       	}
 	  	axios.post('/api/save', body, {})
 	 	.then(function(response){
-	 		alert("Successfully Saved your polygons!");
-	 		location.reload();
+	 		swal({
+                 title: "Successfully Saved your polygon",
+                 type: "success",
+                 timer: 2000
+                 });
+            setTimeout(function(){
+            	location.reload();
+            },2000);            
+	 		
 	 	})
 	 	.catch(function(e){
 	 		alert("error "+e);
