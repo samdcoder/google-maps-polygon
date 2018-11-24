@@ -20,14 +20,16 @@
 		    align-items: center;
 		}
 		.mainCard{
-			width: 50%;
-			height: 25rem;
+			width: 300px;
+			height: 300px;
 			float: left;
-
+			padding-top: 50px;
+  			padding-bottom: 20px;
+	
 		}
 		.mainCard:hover{
-			padding-top: 20px;
-  			padding-bottom: 20px;
+			padding-top: 10px;
+  			padding-bottom: 100px;
 	
 		}
 		a.custom-card,
@@ -36,6 +38,13 @@
   		}
   		.nav-properties{
   			background-color: black;
+  		}
+  		.thirdCard{
+  			margin-left: 25%;
+  		}
+  		.thirdCard:hover{
+  			padding-top: 10px;
+  			padding-bottom: 100px;
   		}
   		
     </style>
@@ -52,23 +61,34 @@
 
 	<div class="container">
 		<div class="row">
-			<a href="/set" class="custom-card mainCard">
-				<div class="card bg-primary" >
+			<a href="/set" class="custom-card mainCard col-sm-12 col-lg-6">
+				<div class="card bg-secondary h-100">
 				  <div class="card-body">
 				    <center><h3 class="card-title">Set Polygons</h5> </center>
 				    <p class="card-body">Select your service area by choosing 1 or more polygons and submit it. Initially it will show your latest saved polygon.</p>
 				    </div>
 				</div>
 			</a>
-			<a href="/check" class="custom-card mainCard">
-				<div class="card">
-				  <div class="card-body bg-primary">
+			<a href="/check" class="custom-card mainCard col-sm-12 col-lg-6">
+				<div class="card  h-100">
+				  <div class="card-body bg-secondary">
 				    <center> <h3 class="card-title">Check</h5> </center>
-				    <p class="card-body">Check if the point you select belongs in any of your previously stored polygons.</p>
+				    <p class="card-body">Check if the point you select belongs in any of your previously stored polygons.
+				    </p>
 				  </div>
 				</div>
 			</a>
-		</div>
+			<a href="/all" class="custom-card mainCard col-sm-12 col-lg-6 thirdCard">
+				<div class="card  h-100">
+				  <div class="card-body bg-secondary">
+				    <center> <h3 class="card-title">All Polygons</h5> </center>
+				    <p class="card-body">See all your saved polygons plotted on the map. Each co-ordinate on every polygon gives your the information about latitude and longitude.</p>
+				  </div>
+				</div>
+
+			</a>
+
+		</div>		
 	</div>
 </body>
-</html>
+</html>		
