@@ -21,6 +21,7 @@
         margin: 0;
         padding: 0;
       }
+      
     </style>
   </head>
   <body>
@@ -72,7 +73,7 @@
 	        }
 
          	 drawingManager = new google.maps.drawing.DrawingManager({
-	         drawingMode: google.maps.drawing.OverlayType.MARKER,
+	         drawingMode: google.maps.drawing.OverlayType.POLYGON,
 	         drawingControl: true,
 	         drawingControlOptions: {
 	            position: google.maps.ControlPosition.TOP_CENTER,
@@ -129,6 +130,8 @@
           				title: "Latitude: "+obj.lat+", Longitude: "+obj.long
        				 });
 	    			}
+	    			drawingManager.setDrawingMode(null);
+
 	    			
 	    		totalPolygons.push(object_points);
 			});
