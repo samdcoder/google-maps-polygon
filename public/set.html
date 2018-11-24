@@ -75,31 +75,12 @@
 	         drawingControlOptions: {
 	            position: google.maps.ControlPosition.TOP_CENTER,
 	            drawingModes: ['polygon']
-	          },
-	          markerOptions: {icon: 'https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png'},
-	            circleOptions: {
-	            fillColor: '#ffff00',
-	            fillOpacity: 1,
-	            strokeWeight: 5,
-	            clickable: false,
-	            editable: true,
-	            zIndex: 1
 	          }
-	        });
+	          });
 	        
 	        drawingManager.setMap(map);      
 	       
-	        google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
-	   		  	object_points = [];
-	   		  	for(var i = 0; i < polygon.getPath().getLength(); i++) {
-	   		  			let obj = {
-	   		  				'lat': Number(polygon.getPath().getAt(i).toUrlValue(6).split(',')[0]), 
-	   		  				'long': Number(polygon.getPath().getAt(i).toUrlValue(6).split(',')[1]) 
-	   		  			}
-	   		  			object_points.push(obj);
-	    			}
-			});
-
+	        //drawing the fetched polygon
 	        for(var i = 0; i < points.length; i++){
 	        	let point = {
 	        		lat: points[i].lat,
@@ -118,6 +99,18 @@
 	          fillOpacity: 0.35
 	        });
 	        Polygon.setMap(map);
+
+	        google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
+	   		  	object_points = [];
+	   		  	for(var i = 0; i < polygon.getPath().getLength(); i++) {
+	   		  			let obj = {
+	   		  				'lat': Number(polygon.getPath().getAt(i).toUrlValue(6).split(',')[0]), 
+	   		  				'long': Number(polygon.getPath().getAt(i).toUrlValue(6).split(',')[1]) 
+	   		  			}
+	   		  			object_points.push(obj);
+	    			}
+			});
+	      
      	})
      	.catch(function(error){
      		console.log("error in latest response = ", error);
