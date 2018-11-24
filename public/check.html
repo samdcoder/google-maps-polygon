@@ -70,13 +70,21 @@
                            });
                           found = true;
                         }
-                    if(found == true){
+                  if(found == true){
                        break;
-                      }
                     }
-                     
-                  });    
-             })
+                  }
+
+                  if(found == false){
+                    swal({
+                         title: "Not in the polygon",
+                         text: "Your selected point doesn't lie in the polygon!",
+                         type: "warning",
+                         timer: 2000
+                         });  
+                    } 
+                });    
+            })
             .catch(function(error){
               console.log("error = ", error);
             });
