@@ -10,10 +10,10 @@ const env = require('./env');
 
 const db_url = 'mongodb+srv://'+env.mongo_username+':'+env.mongo_pw+'@cluster0-xg3gi.mongodb.net/test?retryWrites=true'
 
-mongoose.connect(db_url, function(err){
+mongoose.connect(db_url, { useNewUrlParser: true }, function(err){
 	if(err)
 		throw err;
-}, { useNewUrlParser: true });
+});
 
 app.use(express.static('public'));
 
@@ -32,6 +32,9 @@ app.get('/check', function(req, res){
 	res.sendFile(path.join(__dirname + '/public/check.html'));
 })
 
+app.get('/all', function(req, res){
+	res.sendFile(path.join(__dirname + '/public/all.html'));
+})
 app.post('/api/save', function(req, res){
 	//This api will store the polygon in the mongodb
 	let data = req.body.data;
@@ -53,11 +56,6 @@ app.post('/api/save', function(req, res){
 	res.status(200).send('success');
 	
  });
-
-
-
-
-	
 
 
 app.get('/api/getLatest', function(req, res){
