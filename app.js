@@ -15,6 +15,7 @@ mongoose.connect(db_url, function(err){
 		throw err;
 }, { useNewUrlParser: true });
 
+app.use(express.static('public'));
 
 app.use(bodyParser.json());
 
@@ -85,7 +86,7 @@ app.get('/api/getAll', function(req, res){
  		    for(var i = 0; i < polygon.length; i++){
  		 		data.push(polygon[i].points);
  		  }
- 		 res.send({'data': data});	
+	 		res.send({'data': data});	
  		 }
  		 
 	})
