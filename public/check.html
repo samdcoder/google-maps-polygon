@@ -11,6 +11,7 @@
     integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
     crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.js"></script>
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
 
     <title>Check Vendor</title>
     <style>
@@ -50,22 +51,35 @@
               });
                
             }
+            var i = 1;
             google.maps.event.addListener(map, 'click', function(e) {
-                polygonSet.forEach((p) => {
+                let found = false;
+                for(var i = 0; i < polygonSet.length; i++) {
+                  let p = polygonSet[i];
                   var polygonCoords = [];
                   p.forEach((point) => {
                     polygonCoords.push({lat: point.lat, lng: point.long})
                   })
                   var currentPolygon = new google.maps.Polygon({paths: polygonCoords});
                   if(google.maps.geometry.poly.containsLocation(e.latLng, currentPolygon)){
-                      alert("in the polygon");
-                  }        
-                })
-             });    
-        })
-        .catch(function(error){
-          console.log("error = ", error);
-        });
+                          swal({
+                          title: "In the polygon",
+                           text: "Your selected point lies in the polygon",
+                           type: "success",
+                           timer: 2000
+                           });
+                          found = true;
+                        }
+                    if(found == true){
+                       break;
+                      }
+                    }
+                     
+                  });    
+             })
+            .catch(function(error){
+              console.log("error = ", error);
+            });
       }
     </script>
   </body>
