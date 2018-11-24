@@ -35,21 +35,29 @@ app.get('/check', function(req, res){
 app.post('/api/save', function(req, res){
 	//This api will store the polygon in the mongodb
 	let data = req.body.data;
-	const record = new Points({
-				_id: new mongoose.Types.ObjectId(),
-				points: data
-				});
+	//data will be an array of arrays
+	for(var i = 0; i < data.length; i++){
+		const record = new Points({
+			_id: new mongoose.Types.ObjectId(),
+			points: data[i]
+		});
 	
-	record.save(function(err, result){
-	if(err){
-		console.log("Error: ", err);
-		res.status(400).send('error storing in the database');
-	}
-	console.log("result = ", result);
-	
-	});
+		record.save(function(err, result){
+			if(err){
+					console.log("Error: ", err);
+					res.status(400).send('error storing in the database');
+				}
+			  console.log("result = ", result);			
+			})
+		} 
 	res.status(200).send('success');
-})
+	
+ });
+
+
+
+
+	
 
 
 app.get('/api/getLatest', function(req, res){
