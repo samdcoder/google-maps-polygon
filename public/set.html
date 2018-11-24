@@ -42,7 +42,7 @@
       let object_points = [];
       let totalPolygons = [];
       var marker;
-    
+
       function initMap() {
         fetchPolygons();
       }
@@ -57,6 +57,7 @@
 	        ];
 
 	        if(points == null || points.length == 0){
+	        	points = []
 	        	//show Mumbai's co-ordinates
 	        	 map = new google.maps.Map(document.getElementById('map'), {
         	 		 center: {lat: 19.1136, lng: 72.8697},
@@ -82,25 +83,38 @@
 	        drawingManager.setMap(map);      
 	       
 	        //drawing the fetched polygon
-	        for(var i = 0; i < points.length; i++){
-	        	let point = {
-	        		lat: points[i].lat,
-	        		lng: points[i].long
+	        if(points.length != 0){
+	        	for(var i = 0; i < points.length; i++){
+		        	let point = {
+		        		lat: points[i].lat,
+		        		lng: points[i].long
+		        	}
+	        		Coords.push(point);
 	        	}
-	        	Coords.push(point);
-	        }
 
 	        // Construct the polygon.
-	        var Polygon = new google.maps.Polygon({
-	          paths: Coords,
-	          strokeColor: '#FF0000',
-	          strokeOpacity: 0.8,
-	          strokeWeight: 2,
-	          fillColor: '#FF0000',
-	          fillOpacity: 0.35
-	        });
-	        Polygon.setMap(map);
-
+		        var Polygon = new google.maps.Polygon({
+		          paths: Coords,
+		          strokeColor: '#FF0000',
+		          strokeOpacity: 0.8,
+		          strokeWeight: 2,
+		          fillColor: '#FF0000',
+		          fillOpacity: 0.35
+		        });
+		        Polygon.setMap(map);
+		        //plotting the marker around the polygon
+		        for(var i = 0; i < Polygon.getPath().getLength(); i++){
+		        	let obj = {
+		   		  		'lat': Number(Polygon.getPath().getAt(i).toUrlValue(6).split(',')[0]), 
+		   		  		'long': Number(Polygon.getPath().getAt(i).toUrlValue(6).split(',')[1]) 
+		   		  	}
+		   		    marker = new google.maps.Marker({
+	          			position: {lat: obj.lat, lng: obj.long},
+	          			map: map,
+	          			title: "Latitude: "+obj.lat+", Longitude: "+obj.long
+	       			});
+		        }
+	        }
 	        google.maps.event.addListener(drawingManager, 'polygoncomplete', function(polygon) {
 	   		  	object_points = [];
 	   		  	for(var i = 0; i < polygon.getPath().getLength(); i++) {
@@ -109,7 +123,13 @@
 	   		  				'long': Number(polygon.getPath().getAt(i).toUrlValue(6).split(',')[1]) 
 	   		  			}
 	   		  			object_points.push(obj);
+	   		  			marker = new google.maps.Marker({
+          				position: {lat: obj.lat, lng: obj.long},
+          				map: map,
+          				title: "Latitude: "+obj.lat+", Longitude: "+obj.long
+       				 });
 	    			}
+	    			
 	    		totalPolygons.push(object_points);
 			});
 	      
