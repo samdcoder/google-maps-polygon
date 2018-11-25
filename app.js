@@ -8,7 +8,7 @@ const Points = require('./models/Points')
 const env = require('./env');
 
 
-const db_url = 'mongodb+srv://'+env.mongo_username+':'+env.mongo_pw+'@cluster0-xg3gi.mongodb.net/test?retryWrites=true'
+const db_url = 'mongodb+srv://'+process.env.mongo_username+':'+process.env.mongo_pw+'@cluster0-xg3gi.mongodb.net/test?retryWrites=true'
 
 mongoose.connect(db_url, { useNewUrlParser: true }, function(err){
 	if(err)
