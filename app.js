@@ -5,7 +5,7 @@ const path = require('path')
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const Points = require('./models/Points')
-const env = require('./env');
+//const env = require('./env');
 
 
 const db_url = 'mongodb+srv://'+process.env.mongo_username+':'+process.env.mongo_pw+'@cluster0-xg3gi.mongodb.net/test?retryWrites=true'
