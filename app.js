@@ -35,6 +35,18 @@ app.get('/check', function(req, res){
 app.get('/all', function(req, res){
 	res.sendFile(path.join(__dirname + '/public/all.html'));
 })
+
+/**
+ * Saves all the polygons 
+ *
+ * @section api
+ * @type post
+ * @url /api/save
+   @param {Array} data
+   
+ */
+
+
 app.post('/api/save', function(req, res){
 	//This api will store the polygon in the mongodb
 	let data = req.body.data;
@@ -57,6 +69,13 @@ app.post('/api/save', function(req, res){
 	
  });
 
+/**
+ * Get the co-ordinates of last saved polygon
+ *
+ * @section api
+ * @type get
+ * @url /api/getLatest
+ */
 
 app.get('/api/getLatest', function(req, res){
 	//This api will return the latest polygon to the user
@@ -79,6 +98,14 @@ app.get('/api/getLatest', function(req, res){
  		 
 	});
 })
+
+/**
+ * Get the co-ordinates of all the saved polygons
+ *
+ * @section api
+ * @type get
+ * @url /api/getAll
+ */
 
 app.get('/api/getAll', function(req, res){
 	Points.find({}, {}, function(err, polygon){
